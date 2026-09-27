@@ -15,4 +15,4 @@ public class Equipement {
     private Long idEquipement;
 
     private String libelle;
-}
+} 

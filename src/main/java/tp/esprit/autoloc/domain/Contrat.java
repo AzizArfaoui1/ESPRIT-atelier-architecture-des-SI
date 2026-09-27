@@ -18,4 +18,4 @@ public class Contrat {
     private LocalDate dateSignature;
     private Double montantTotal;
     private Boolean valide;
-}
+} 
