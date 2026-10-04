@@ -3,6 +3,7 @@ package tp.esprit.autoloc.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -18,4 +19,10 @@ public class Contrat {
     private LocalDate dateSignature;
     private Double montantTotal;
     private Boolean valide;
+
+    @OneToOne
+    private Reservation reservation;
+
+    @OneToMany(mappedBy = "contrat")
+    private Set<Paiement> paiements;
 } 

@@ -20,4 +20,19 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     private StatutReservation statut;
+
+    @ManyToOne
+    private Client client;
+
+    @ManyToOne
+    private Vehicule vehicule;
+
+    @ManyToOne
+    private Agence agenceDepart;
+
+    @ManyToOne
+    private Agence agenceRetour;
+
+    @OneToOne(mappedBy = "reservation")
+    private Contrat contrat;
 } 
