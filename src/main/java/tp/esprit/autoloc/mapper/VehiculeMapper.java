@@ -3,10 +3,7 @@ package tp.esprit.autoloc.mapper;
 import org.springframework.stereotype.Component;
 import tp.esprit.autoloc.domain.Vehicule;
 import tp.esprit.autoloc.dto.VehiculeDto;
-import tp.esprit.autoloc.dto.VehiculeRequestDto;
 import tp.esprit.autoloc.repository.AgenceRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class VehiculeMapper {
@@ -16,21 +13,17 @@ public class VehiculeMapper {
         this.agenceRepository = agenceRepository;
     }
 
-    public Vehicule toEntity(VehiculeRequestDto dto) {
+    public Vehicule toEntity(VehiculeDto dto) {
         Vehicule vehicule = new Vehicule();
-        updateEntity(vehicule, dto);
-        return vehicule;
-    }
-
-    public void updateEntity(Vehicule vehicule, VehiculeRequestDto dto) {
+        vehicule.setIdVehicule(dto.idVehicule());
         vehicule.setImmatriculation(dto.immatriculation());
         vehicule.setMarque(dto.marque());
         vehicule.setModele(dto.modele());
         vehicule.setCategorie(dto.categorie());
         vehicule.setTarifJournalier(dto.tarifJournalier());
         vehicule.setStatut(dto.statut());
-        vehicule.setAgence(dto.agenceId() == null ? null : agenceRepository.findById(dto.agenceId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Agence introuvable")));
+        vehicule.setAgence(dto.agenceId() == null ? null : agenceRepository.findById(dto.agenceId()).orElse(null));
+        return vehicule;
     }
 
     public VehiculeDto toDto(Vehicule vehicule) {
