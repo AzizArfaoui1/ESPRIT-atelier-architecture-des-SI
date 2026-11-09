@@ -1,11 +1,8 @@
 package tp.esprit.autoloc.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 import tp.esprit.autoloc.domain.Vehicule;
 import tp.esprit.autoloc.dto.VehiculeDto;
-import tp.esprit.autoloc.dto.VehiculeRequestDto;
 import tp.esprit.autoloc.mapper.VehiculeMapper;
 import tp.esprit.autoloc.repository.VehiculeRepository;
 
@@ -27,16 +24,13 @@ public class VehiculeService implements IVehiculeService {
     }
 
     @Override
-    public VehiculeDto addVehicule(VehiculeRequestDto vehicule) {
+    public VehiculeDto addVehicule(VehiculeDto vehicule) {
         return vehiculeMapper.toDto(vehiculeRepository.save(vehiculeMapper.toEntity(vehicule)));
     }
 
     @Override
-    public VehiculeDto updateVehicule(Long idVehicule, VehiculeRequestDto vehicule) {
-        Vehicule existing = vehiculeRepository.findById(idVehicule)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Véhicule introuvable"));
-        vehiculeMapper.updateEntity(existing, vehicule);
-        return vehiculeMapper.toDto(vehiculeRepository.save(existing));
+    public VehiculeDto updateVehicule(VehiculeDto vehicule) {
+        return vehiculeMapper.toDto(vehiculeRepository.save(vehiculeMapper.toEntity(vehicule)));
     }
 
     @Override
@@ -47,5 +41,10 @@ public class VehiculeService implements IVehiculeService {
     @Override
     public void removeVehicule(Long idVehicule) {
         vehiculeRepository.deleteById(idVehicule);
+    }
+
+    @Override
+    public List<Vehicule> addVehicules(List<Vehicule> vehicules) {
+        return vehiculeRepository.saveAll(vehicules);
     }
 }

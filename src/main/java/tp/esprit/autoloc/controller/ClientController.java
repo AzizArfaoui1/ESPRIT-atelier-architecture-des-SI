@@ -6,9 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import jakarta.validation.Valid;
 import tp.esprit.autoloc.dto.ClientDto;
-import tp.esprit.autoloc.dto.ClientRequestDto;
 import tp.esprit.autoloc.service.IClientService;
 
 import java.util.List;
@@ -44,15 +42,18 @@ public class ClientController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Créer un client")
     @ApiResponse(responseCode = "201", description = "Client créé")
-    public ClientDto create(@Valid @RequestBody ClientRequestDto client) {
+    public ClientDto create(@RequestBody ClientDto client) {
         return clientService.addClient(client);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Modifier un client")
 
-    public ClientDto update(@PathVariable Long id, @Valid @RequestBody ClientRequestDto client) {
-        return clientService.updateClient(id, client);
+    public ClientDto update(@PathVariable Long id, @RequestBody ClientDto client) {
+        getById(id);
+        client = new ClientDto(id, client.nom(), client.prenom(), client.email(), client.telephone(),
+                client.numPermis(), client.dateInscription());
+        return clientService.updateClient(client);
     }
 
     @DeleteMapping("/{id}")
