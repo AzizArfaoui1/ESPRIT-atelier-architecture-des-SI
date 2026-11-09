@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import tp.esprit.autoloc.domain.Client;
+import tp.esprit.autoloc.dto.ClientDto;
 import tp.esprit.autoloc.service.IClientService;
 
 import java.util.List;
@@ -23,18 +23,15 @@ public class ClientController {
     @GetMapping
     @Operation(summary = "Lister les clients")
     @ApiResponse(responseCode = "200", description = "Liste des clients retournée")
-    public List<Client> getAll() {
+    public List<ClientDto> getAll() {
         return clientService.retrieveAllClients();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Récupérer un client")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Client trouvé"),
-            @ApiResponse(responseCode = "404", description = "Client introuvable")
-    })
-    public Client getById(@PathVariable Long id) {
-        Client client = clientService.retrieveClient(id);
+
+    public ClientDto getById(@PathVariable Long id) {
+        ClientDto client = clientService.retrieveClient(id);
         if (client == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client introuvable");
         }
@@ -45,29 +42,24 @@ public class ClientController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Créer un client")
     @ApiResponse(responseCode = "201", description = "Client créé")
-    public Client create(@RequestBody Client client) {
+    public ClientDto create(@RequestBody ClientDto client) {
         return clientService.addClient(client);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Modifier un client")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Client modifié"),
-            @ApiResponse(responseCode = "404", description = "Client introuvable")
-    })
-    public Client update(@PathVariable Long id, @RequestBody Client client) {
+
+    public ClientDto update(@PathVariable Long id, @RequestBody ClientDto client) {
         getById(id);
-        client.setIdClient(id);
+        client = new ClientDto(id, client.nom(), client.prenom(), client.email(), client.telephone(),
+                client.numPermis(), client.dateInscription());
         return clientService.updateClient(client);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Supprimer un client")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Client supprimé"),
-            @ApiResponse(responseCode = "404", description = "Client introuvable")
-    })
+
     public void delete(@PathVariable Long id) {
         getById(id);
         clientService.removeClient(id);
