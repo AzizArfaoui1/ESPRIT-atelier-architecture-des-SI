@@ -2,6 +2,8 @@ package tp.esprit.autoloc.service;
 
 import org.springframework.stereotype.Service;
 import tp.esprit.autoloc.domain.Client;
+import tp.esprit.autoloc.dto.ClientDto;
+import tp.esprit.autoloc.mapper.ClientMapper;
 import tp.esprit.autoloc.repository.ClientRepository;
 
 import java.util.List;
@@ -9,29 +11,31 @@ import java.util.List;
 @Service
 public class ClientService implements IClientService {
     private final ClientRepository clientRepository;
+    private final ClientMapper clientMapper;
 
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository, ClientMapper clientMapper) {
         this.clientRepository = clientRepository;
+        this.clientMapper = clientMapper;
     }
 
     @Override
-    public List<Client> retrieveAllClients() {
-        return clientRepository.findAll();
+    public List<ClientDto> retrieveAllClients() {
+        return clientRepository.findAll().stream().map(clientMapper::toDto).toList();
     }
 
     @Override
-    public Client addClient(Client client) {
-        return clientRepository.save(client);
+    public ClientDto addClient(ClientDto client) {
+        return clientMapper.toDto(clientRepository.save(clientMapper.toEntity(client)));
     }
 
     @Override
-    public Client updateClient(Client client) {
-        return clientRepository.save(client);
+    public ClientDto updateClient(ClientDto client) {
+        return clientMapper.toDto(clientRepository.save(clientMapper.toEntity(client)));
     }
 
     @Override
-    public Client retrieveClient(Long idClient) {
-        return clientRepository.findById(idClient).orElse(null);
+    public ClientDto retrieveClient(Long idClient) {
+        return clientRepository.findById(idClient).map(clientMapper::toDto).orElse(null);
     }
 
     @Override

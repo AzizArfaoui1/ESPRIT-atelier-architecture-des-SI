@@ -2,6 +2,8 @@ package tp.esprit.autoloc.service;
 
 import org.springframework.stereotype.Service;
 import tp.esprit.autoloc.domain.Vehicule;
+import tp.esprit.autoloc.dto.VehiculeDto;
+import tp.esprit.autoloc.mapper.VehiculeMapper;
 import tp.esprit.autoloc.repository.VehiculeRepository;
 
 import java.util.List;
@@ -9,29 +11,31 @@ import java.util.List;
 @Service
 public class VehiculeService implements IVehiculeService {
     private final VehiculeRepository vehiculeRepository;
+    private final VehiculeMapper vehiculeMapper;
 
-    public VehiculeService(VehiculeRepository vehiculeRepository) {
+    public VehiculeService(VehiculeRepository vehiculeRepository, VehiculeMapper vehiculeMapper) {
         this.vehiculeRepository = vehiculeRepository;
+        this.vehiculeMapper = vehiculeMapper;
     }
 
     @Override
-    public List<Vehicule> retrieveAllVehicules() {
-        return vehiculeRepository.findAll();
+    public List<VehiculeDto> retrieveAllVehicules() {
+        return vehiculeRepository.findAll().stream().map(vehiculeMapper::toDto).toList();
     }
 
     @Override
-    public Vehicule addVehicule(Vehicule vehicule) {
-        return vehiculeRepository.save(vehicule);
+    public VehiculeDto addVehicule(VehiculeDto vehicule) {
+        return vehiculeMapper.toDto(vehiculeRepository.save(vehiculeMapper.toEntity(vehicule)));
     }
 
     @Override
-    public Vehicule updateVehicule(Vehicule vehicule) {
-        return vehiculeRepository.save(vehicule);
+    public VehiculeDto updateVehicule(VehiculeDto vehicule) {
+        return vehiculeMapper.toDto(vehiculeRepository.save(vehiculeMapper.toEntity(vehicule)));
     }
 
     @Override
-    public Vehicule retrieveVehicule(Long idVehicule) {
-        return vehiculeRepository.findById(idVehicule).orElse(null);
+    public VehiculeDto retrieveVehicule(Long idVehicule) {
+        return vehiculeRepository.findById(idVehicule).map(vehiculeMapper::toDto).orElse(null);
     }
 
     @Override

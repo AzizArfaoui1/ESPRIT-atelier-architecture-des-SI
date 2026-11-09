@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import tp.esprit.autoloc.domain.Agence;
+import tp.esprit.autoloc.dto.AgenceDto;
 import tp.esprit.autoloc.service.IAgenceService;
 
 import java.util.List;
@@ -23,18 +23,15 @@ public class AgenceController {
     @GetMapping
     @Operation(summary = "Lister les agences")
     @ApiResponse(responseCode = "200", description = "Liste des agences retournée")
-    public List<Agence> getAll() {
+    public List<AgenceDto> getAll() {
         return agenceService.retrieveAllAgences();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Récupérer une agence")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Agence trouvée"),
-            @ApiResponse(responseCode = "404", description = "Agence introuvable")
-    })
-    public Agence getById(@PathVariable Long id) {
-        Agence agence = agenceService.retrieveAgence(id);
+
+    public AgenceDto getById(@PathVariable Long id) {
+        AgenceDto agence = agenceService.retrieveAgence(id);
         if (agence == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Agence introuvable");
         }
@@ -45,29 +42,23 @@ public class AgenceController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Créer une agence")
     @ApiResponse(responseCode = "201", description = "Agence créée")
-    public Agence create(@RequestBody Agence agence) {
+    public AgenceDto create(@RequestBody AgenceDto agence) {
         return agenceService.addAgence(agence);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Modifier une agence")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Agence modifiée"),
-            @ApiResponse(responseCode = "404", description = "Agence introuvable")
-    })
-    public Agence update(@PathVariable Long id, @RequestBody Agence agence) {
+
+    public AgenceDto update(@PathVariable Long id, @RequestBody AgenceDto agence) {
         getById(id);
-        agence.setIdAgence(id);
+        agence = new AgenceDto(id, agence.nom(), agence.ville(), agence.adresse(), agence.telephone());
         return agenceService.updateAgence(agence);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Supprimer une agence")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Agence supprimée"),
-            @ApiResponse(responseCode = "404", description = "Agence introuvable")
-    })
+
     public void delete(@PathVariable Long id) {
         getById(id);
         agenceService.removeAgence(id);
