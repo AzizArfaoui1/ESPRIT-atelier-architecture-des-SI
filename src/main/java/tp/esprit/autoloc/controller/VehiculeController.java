@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import jakarta.validation.Valid;
 import tp.esprit.autoloc.dto.VehiculeDto;
+import tp.esprit.autoloc.dto.VehiculeRequestDto;
 import tp.esprit.autoloc.service.IVehiculeService;
 
 import java.util.List;
@@ -43,18 +44,15 @@ public class VehiculeController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Créer un véhicule")
     @ApiResponse(responseCode = "201", description = "Véhicule créé")
-    public VehiculeDto create(@Valid @RequestBody VehiculeDto vehicule) {
+    public VehiculeDto create(@Valid @RequestBody VehiculeRequestDto vehicule) {
         return vehiculeService.addVehicule(vehicule);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Modifier un véhicule")
 
-    public VehiculeDto update(@PathVariable Long id, @Valid @RequestBody VehiculeDto vehicule) {
-        getById(id);
-        vehicule = new VehiculeDto(id, vehicule.immatriculation(), vehicule.marque(), vehicule.modele(),
-                vehicule.categorie(), vehicule.tarifJournalier(), vehicule.statut(), vehicule.agenceId());
-        return vehiculeService.updateVehicule(vehicule);
+    public VehiculeDto update(@PathVariable Long id, @Valid @RequestBody VehiculeRequestDto vehicule) {
+        return vehiculeService.updateVehicule(id, vehicule);
     }
 
     @DeleteMapping("/{id}")

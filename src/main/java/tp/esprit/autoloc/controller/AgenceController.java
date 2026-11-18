@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import jakarta.validation.Valid;
 import tp.esprit.autoloc.dto.AgenceDto;
+import tp.esprit.autoloc.dto.AgenceRequestDto;
 import tp.esprit.autoloc.service.IAgenceService;
 
 import java.util.List;
@@ -43,17 +44,15 @@ public class AgenceController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Créer une agence")
     @ApiResponse(responseCode = "201", description = "Agence créée")
-    public AgenceDto create(@Valid @RequestBody AgenceDto agence) {
+    public AgenceDto create(@Valid @RequestBody AgenceRequestDto agence) {
         return agenceService.addAgence(agence);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Modifier une agence")
 
-    public AgenceDto update(@PathVariable Long id, @Valid @RequestBody AgenceDto agence) {
-        getById(id);
-        agence = new AgenceDto(id, agence.nom(), agence.ville(), agence.adresse(), agence.telephone());
-        return agenceService.updateAgence(agence);
+    public AgenceDto update(@PathVariable Long id, @Valid @RequestBody AgenceRequestDto agence) {
+        return agenceService.updateAgence(id, agence);
     }
 
     @DeleteMapping("/{id}")
