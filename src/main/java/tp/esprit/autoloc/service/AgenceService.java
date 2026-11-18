@@ -1,8 +1,11 @@
 package tp.esprit.autoloc.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tp.esprit.autoloc.domain.Agence;
 import tp.esprit.autoloc.dto.AgenceDto;
+import tp.esprit.autoloc.dto.AgenceRequestDto;
 import tp.esprit.autoloc.mapper.AgenceMapper;
 import tp.esprit.autoloc.repository.AgenceRepository;
 
@@ -24,13 +27,16 @@ public class AgenceService implements IAgenceService {
     }
 
     @Override
-    public AgenceDto addAgence(AgenceDto agence) {
+    public AgenceDto addAgence(AgenceRequestDto agence) {
         return agenceMapper.toDto(agenceRepository.save(agenceMapper.toEntity(agence)));
     }
 
     @Override
-    public AgenceDto updateAgence(AgenceDto agence) {
-        return agenceMapper.toDto(agenceRepository.save(agenceMapper.toEntity(agence)));
+    public AgenceDto updateAgence(Long idAgence, AgenceRequestDto agence) {
+        Agence existing = agenceRepository.findById(idAgence)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agence introuvable"));
+        agenceMapper.updateEntity(existing, agence);
+        return agenceMapper.toDto(agenceRepository.save(existing));
     }
 
     @Override
@@ -43,8 +49,4 @@ public class AgenceService implements IAgenceService {
         agenceRepository.deleteById(idAgence);
     }
 
-    @Override
-    public List<Agence> addAgences(List<Agence> agences) {
-        return agenceRepository.saveAll(agences);
-    }
 }

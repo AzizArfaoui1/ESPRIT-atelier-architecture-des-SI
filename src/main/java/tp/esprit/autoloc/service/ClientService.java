@@ -1,8 +1,11 @@
 package tp.esprit.autoloc.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tp.esprit.autoloc.domain.Client;
 import tp.esprit.autoloc.dto.ClientDto;
+import tp.esprit.autoloc.dto.ClientRequestDto;
 import tp.esprit.autoloc.mapper.ClientMapper;
 import tp.esprit.autoloc.repository.ClientRepository;
 
@@ -24,13 +27,16 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public ClientDto addClient(ClientDto client) {
+    public ClientDto addClient(ClientRequestDto client) {
         return clientMapper.toDto(clientRepository.save(clientMapper.toEntity(client)));
     }
 
     @Override
-    public ClientDto updateClient(ClientDto client) {
-        return clientMapper.toDto(clientRepository.save(clientMapper.toEntity(client)));
+    public ClientDto updateClient(Long idClient, ClientRequestDto client) {
+        Client existing = clientRepository.findById(idClient)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client introuvable"));
+        clientMapper.updateEntity(existing, client);
+        return clientMapper.toDto(clientRepository.save(existing));
     }
 
     @Override
@@ -43,8 +49,4 @@ public class ClientService implements IClientService {
         clientRepository.deleteById(idClient);
     }
 
-    @Override
-    public List<Client> addClients(List<Client> clients) {
-        return clientRepository.saveAll(clients);
-    }
 }
