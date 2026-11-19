@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 @Entity
 @Table(name = "vehicule")
@@ -42,5 +43,5 @@ public class Vehicule {
     private Set<Maintenance> maintenances;
 
     @ManyToMany
-    private Set<Equipement> equipements;
+    private List<Equipement> equipements;
 } 

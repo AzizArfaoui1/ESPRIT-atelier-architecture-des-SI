@@ -2,7 +2,7 @@ package tp.esprit.autoloc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,5 +18,5 @@ public class Equipement {
     private String libelle;
 
     @ManyToMany(mappedBy = "equipements")
-    private Set<Vehicule> vehicules;
+    private List<Vehicule> vehicules;
 } 

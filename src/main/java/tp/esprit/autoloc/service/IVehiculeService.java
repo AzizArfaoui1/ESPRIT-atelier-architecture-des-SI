@@ -11,4 +11,6 @@ public interface IVehiculeService {
     VehiculeDto updateVehicule(Long idVehicule, VehiculeRequestDto vehicule);
     VehiculeDto retrieveVehicule(Long idVehicule);
     void removeVehicule(Long idVehicule);
+    VehiculeDto affecterVehiculeAEquipement(Long idVehicule,Long idEquipement);
+
 }

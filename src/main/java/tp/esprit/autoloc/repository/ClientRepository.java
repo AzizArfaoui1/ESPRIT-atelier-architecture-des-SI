@@ -5,4 +5,5 @@ import tp.esprit.autoloc.domain.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
+    Client findByNomAndPrenom(String nom, String prenom);
 }

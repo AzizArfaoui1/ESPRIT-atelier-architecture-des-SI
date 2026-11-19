@@ -3,22 +3,28 @@ package tp.esprit.autoloc.service;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import tp.esprit.autoloc.domain.Equipement;
 import tp.esprit.autoloc.domain.Vehicule;
 import tp.esprit.autoloc.dto.VehiculeDto;
 import tp.esprit.autoloc.dto.VehiculeRequestDto;
 import tp.esprit.autoloc.mapper.VehiculeMapper;
+import tp.esprit.autoloc.repository.EquipementRepository;
 import tp.esprit.autoloc.repository.VehiculeRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class VehiculeService implements IVehiculeService {
     private final VehiculeRepository vehiculeRepository;
     private final VehiculeMapper vehiculeMapper;
+    private final EquipementRepository equipementRepository;
 
-    public VehiculeService(VehiculeRepository vehiculeRepository, VehiculeMapper vehiculeMapper) {
+
+    public VehiculeService(VehiculeRepository vehiculeRepository, VehiculeMapper vehiculeMapper, EquipementRepository equipementRepository) {
         this.vehiculeRepository = vehiculeRepository;
         this.vehiculeMapper = vehiculeMapper;
+        this.equipementRepository = equipementRepository;
     }
 
     @Override
@@ -47,6 +53,24 @@ public class VehiculeService implements IVehiculeService {
     @Override
     public void removeVehicule(Long idVehicule) {
         vehiculeRepository.deleteById(idVehicule);
+    }
+
+    @Override
+    public VehiculeDto affecterVehiculeAEquipement(Long idVehicule, Long idEquipement) {
+        Vehicule vehicule = vehiculeRepository.findById(idVehicule).orElse(null);
+        Equipement equipement = equipementRepository.findById(idEquipement).orElse(null);
+
+        List<Vehicule> vehicules = new ArrayList<>();
+
+        if (equipement.getVehicules() != null) {
+            vehicules = equipement.getVehicules();
+        }
+
+        vehicules.add(vehicule);
+        equipement.setVehicules(vehicules);
+
+        equipementRepository.save(equipement);
+        return vehiculeMapper.toDto(vehicule);
     }
 
 }
