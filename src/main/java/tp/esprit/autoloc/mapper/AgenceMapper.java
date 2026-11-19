@@ -1,26 +1,35 @@
 package tp.esprit.autoloc.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 import tp.esprit.autoloc.domain.Agence;
 import tp.esprit.autoloc.dto.AgenceDto;
 import tp.esprit.autoloc.dto.AgenceRequestDto;
 
-@Component
-public class AgenceMapper {
-    public Agence toEntity(AgenceRequestDto dto) {
-        return new Agence(null, dto.nom(), dto.ville(), dto.adresse(), dto.telephone(),
-                null, null, null, null);
-    }
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface AgenceMapper {
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "idAgence", source = "idAgence")
+    @Mapping(target = "nom", source = "nom")
+    @Mapping(target = "ville", source = "ville")
+    @Mapping(target = "adresse", source = "adresse")
+    @Mapping(target = "telephone", source = "telephone")
+    AgenceDto toDto(Agence agence);
 
-    public void updateEntity(Agence agence, AgenceRequestDto dto) {
-        agence.setNom(dto.nom());
-        agence.setVille(dto.ville());
-        agence.setAdresse(dto.adresse());
-        agence.setTelephone(dto.telephone());
-    }
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "nom", source = "nom")
+    @Mapping(target = "ville", source = "ville")
+    @Mapping(target = "adresse", source = "adresse")
+    @Mapping(target = "telephone", source = "telephone")
+    Agence toEntity(AgenceRequestDto dto);
 
-    public AgenceDto toDto(Agence agence) {
-        return new AgenceDto(agence.getIdAgence(), agence.getNom(), agence.getVille(),
-                agence.getAdresse(), agence.getTelephone());
-    }
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "nom", source = "nom")
+    @Mapping(target = "ville", source = "ville")
+    @Mapping(target = "adresse", source = "adresse")
+    @Mapping(target = "telephone", source = "telephone")
+    void updateEntity(AgenceRequestDto dto, @MappingTarget Agence agence);
 }

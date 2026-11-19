@@ -35,7 +35,7 @@ public class VehiculeService implements IVehiculeService {
     public VehiculeDto updateVehicule(Long idVehicule, VehiculeRequestDto vehicule) {
         Vehicule existing = vehiculeRepository.findById(idVehicule)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Véhicule introuvable"));
-        vehiculeMapper.updateEntity(existing, vehicule);
+        vehiculeMapper.updateEntity(vehicule, existing);
         return vehiculeMapper.toDto(vehiculeRepository.save(existing));
     }
 

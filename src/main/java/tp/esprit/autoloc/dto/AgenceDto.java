@@ -1,3 +1,18 @@
 package tp.esprit.autoloc.dto;
 
-public record AgenceDto(Long idAgence, String nom, String ville, String adresse, String telephone) { }
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class AgenceDto {
+    private Long idAgence;
+    private String nom;
+    private String ville;
+    private String adresse;
+    private String telephone;
+}

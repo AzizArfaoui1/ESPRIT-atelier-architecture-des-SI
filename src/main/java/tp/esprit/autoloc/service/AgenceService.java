@@ -35,7 +35,7 @@ public class AgenceService implements IAgenceService {
     public AgenceDto updateAgence(Long idAgence, AgenceRequestDto agence) {
         Agence existing = agenceRepository.findById(idAgence)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agence introuvable"));
-        agenceMapper.updateEntity(existing, agence);
+        agenceMapper.updateEntity(agence, existing);
         return agenceMapper.toDto(agenceRepository.save(existing));
     }
 

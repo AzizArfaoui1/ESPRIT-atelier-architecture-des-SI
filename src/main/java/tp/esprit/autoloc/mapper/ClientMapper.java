@@ -1,28 +1,40 @@
 package tp.esprit.autoloc.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 import tp.esprit.autoloc.domain.Client;
 import tp.esprit.autoloc.dto.ClientDto;
 import tp.esprit.autoloc.dto.ClientRequestDto;
 
-@Component
-public class ClientMapper {
-    public Client toEntity(ClientRequestDto dto) {
-        return new Client(null, dto.nom(), dto.prenom(), dto.email(), dto.telephone(),
-                dto.numPermis(), dto.dateInscription(), null);
-    }
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface ClientMapper {
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "idClient", source = "idClient")
+    @Mapping(target = "nom", source = "nom")
+    @Mapping(target = "prenom", source = "prenom")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "telephone", source = "telephone")
+    @Mapping(target = "dateInscription", source = "dateInscription", dateFormat = "dd/MM/yyyy")
+    ClientDto toDto(Client client);
 
-    public void updateEntity(Client client, ClientRequestDto dto) {
-        client.setNom(dto.nom());
-        client.setPrenom(dto.prenom());
-        client.setEmail(dto.email());
-        client.setTelephone(dto.telephone());
-        client.setNumPermis(dto.numPermis());
-        client.setDateInscription(dto.dateInscription());
-    }
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "nom", source = "nom")
+    @Mapping(target = "prenom", source = "prenom")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "telephone", source = "telephone")
+    @Mapping(target = "numPermis", source = "numPermis")
+    @Mapping(target = "dateInscription", source = "dateInscription", dateFormat = "dd/MM/yyyy")
+    Client toEntity(ClientRequestDto dto);
 
-    public ClientDto toDto(Client client) {
-        return new ClientDto(client.getIdClient(), client.getNom(), client.getPrenom(), client.getEmail(),
-                client.getTelephone(), client.getNumPermis(), client.getDateInscription());
-    }
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "nom", source = "nom")
+    @Mapping(target = "prenom", source = "prenom")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "telephone", source = "telephone")
+    @Mapping(target = "numPermis", source = "numPermis")
+    @Mapping(target = "dateInscription", source = "dateInscription", dateFormat = "dd/MM/yyyy")
+    void updateEntity(ClientRequestDto dto, @MappingTarget Client client);
 }

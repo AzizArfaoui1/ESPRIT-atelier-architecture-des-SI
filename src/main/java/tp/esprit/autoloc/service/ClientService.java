@@ -35,7 +35,7 @@ public class ClientService implements IClientService {
     public ClientDto updateClient(Long idClient, ClientRequestDto client) {
         Client existing = clientRepository.findById(idClient)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client introuvable"));
-        clientMapper.updateEntity(existing, client);
+        clientMapper.updateEntity(client, existing);
         return clientMapper.toDto(clientRepository.save(existing));
     }
 
